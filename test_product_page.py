@@ -14,6 +14,31 @@ def test_guest_can_add_product_to_basket(browser, promo_offer):
     page.price_in_basket_is_the_same()
 '''
 
+class TestUserAddToBasketFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com"
+        self.page = LoginPage(browser, link)
+        self.page.open()
+        email = str(time.time()) + "@fakemail.org"
+        password = "StepikPassword123!"
+        self.page.register_new_user(email, password)
+        self.page.should_be_authorized_user()
+
+    def test_user_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com"
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_not_be_success_message()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com"
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_to_cart_click()
+        # Если есть квиз (promo), добавь solve_quiz_and_get_code()
+        page.should_be_product_adding_message()
+
 def test_guest_should_see_login_link_on_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
